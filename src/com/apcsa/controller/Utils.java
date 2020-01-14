@@ -13,6 +13,7 @@ import com.apcsa.model.Student;
 import java.util.*;
 
 public class Utils {
+  private Student student;
 
     /**
      * Returns an MD5 hash of the user's plaintext password.
@@ -38,5 +39,15 @@ public class Utils {
         }
 
         return pwd.toString();
+    }
+
+    public static int getInt(Scanner in, int invalid) {
+        try {
+            return in.nextInt();                // try to read and return user-provided value
+        } catch (InputMismatchException e) {
+            return invalid;                     // return default in the even of an type mismatch
+        } finally {
+            in.nextLine();                      // always consume the dangling newline character
+        }
     }
 }
