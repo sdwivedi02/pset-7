@@ -161,6 +161,72 @@ public class Application {
         }
      }
 
+     private AdministratorAction getAdministratorMenuSelection() {
+       System.out.println();
+
+       System.out.println("[1] View faculty.");
+       System.out.println("[2] View faculty by department.");
+       System.out.println("[3] View student enrollment.");
+       System.out.println("[4] View student enrollment by grade.");
+       System.out.println("[5] View student enrollment by course.");
+       System.out.println("[6] Change password.");
+       System.out.println("[7] Logout.");
+       System.out.print("\n::: ");
+
+       switch (Utils.getInt(in, -1)) {
+           case 1: return AdministratorAction.FACULTY;
+           case 2: return AdministratorAction.DEPARTMENT;
+           case 3: return AdministratorAction.STUDENTS;
+           case 4: return AdministratorAction.GRADE;
+           case 5: return AdministratorAction.COURSE;
+           case 6: return AdministratorAction.PASSWORD;
+           case 7: return AdministratorAction.LOGOUT;
+       }
+
+       return null;
+   }
+
+   private TeacherAction getTeacherMenuSelection() {
+       System.out.println();
+
+       System.out.println("[1] View student enrollment by course");
+       System.out.println("[2] Add assignment.");
+       System.out.println("[3] Delete Assignment.");
+       System.out.println("[4] Enter grade.");
+       System.out.println("[5] Change password.");
+       System.out.println("[6] Logout.");
+       System.out.print("\n::: ");
+
+       switch (Utils.getInt(in, -1)) {
+           case 1: return TeacherAction.STUDENTS_COURSE;
+           case 2: return TeacherAction.ADD_ASS;
+           case 3: return TeacherAction.DEL_ASS;
+           case 4: return TeacherAction.GRADE_ASS;
+           case 5: return TeacherAction.PASSWORD;
+           case 6: return TeacherAction.LOGOUT;
+       }
+
+       return null;
+   }
+
+   private StudentAction getStudentMenuSelection() {
+       System.out.println();
+
+       System.out.println("[1] View course grades.");
+       System.out.println("[2] View assignment grades by course.");
+       System.out.println("[3] Change password.");
+       System.out.println("[4] Logout.");
+       System.out.print("\n::: ");
+
+       switch (Utils.getInt(in, -1)) {
+           case 1: return StudentAction.COURSE_GRADE;
+           case 2: return StudentAction.COURSE_ASS;
+           case 3: return StudentAction.PASSWORD;
+           case 4: return StudentAction.LOGOUT;
+           default: return null;
+       }
+    }
+
     /**
      * Logs in with the provided credentials.
      *
