@@ -143,6 +143,24 @@ public class Application {
         }
     }
 
+    private RootAction getRootMenuSelection() {
+        System.out.println();
+
+        System.out.println("[1] Reset user password.");
+        System.out.println("[2] Factory reset database.");
+        System.out.println("[3] Logout.");
+        System.out.println("[4] Shutdown.");
+        System.out.print("\n::: ");
+
+        switch (Utils.getInt(in, -1)) {
+            case 1: return RootAction.PASSWORD;
+            case 2: return RootAction.DATABASE;
+            case 3: return RootAction.LOGOUT;
+            case 4: return RootAction.SHUTDOWN;
+            default: return null;
+        }
+     }
+
     /**
      * Logs in with the provided credentials.
      *
