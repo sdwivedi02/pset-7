@@ -376,6 +376,191 @@ private void viewFacultyByDepartment() {
 
 }
 
+private void viewStudents() {
+        //
+        // get a list of students
+        //
+        // if list of students is empty...
+        //      print a message saying exactly that
+        // otherwise...
+        //      print the list of students by name and graduation year
+        //
+
+    	ArrayList<Student> students = PowerSchool.getStudents();
+
+        if (students.isEmpty()) {
+            System.out.println("\nNo students to display.");
+        } else {
+            System.out.println();
+
+            int i = 1;
+            for (Student student : students) {
+                System.out.println(i++ + ". " + student.getName() + " / " + student.getGradYear());
+            }
+        }
+    }
+
+    /*
+     * Displays all students by grade.
+     */
+
+    private void viewStudentsByGrade() {
+        //
+        // get list of students by grade
+        //      to do this, you'll need to prompt the user to choose a grade level (more on this later)
+        //
+        // if the list of students is empty...
+        //      print a message saying exactly that
+        // otherwise...
+        //      print the list of students by name and class rank
+        //
+
+    	int inputStudentGrade = getGradeSelection();
+
+    	ArrayList<Student> students = PowerSchool.getStudentsByGradeAndRank(inputStudentGrade);
+
+        if (students.isEmpty()) {
+            System.out.println("\nNo students to display.");
+        } else {
+            System.out.println();
+
+            int i = 1;
+            for (Student student : students) {
+                System.out.println(i++ + ". " + student.getName() + " / #" + student.getRank());
+            }
+        }
+    }
+
+    /*
+     * Displays all students by course.
+     */
+
+    private void viewStudentsByCourse(){
+        //
+        // get a list of students by course
+        //      to do this, you'll need to prompt the user to choose a course (more on this later)
+        //
+        // if the list of students is empty...
+        //      print a message saying exactly that
+        // otherwise...
+        //      print the list of students by name and grade point average
+        //
+
+    	int inputCourseNo = PowerSchool.getCourseIdFromNo(getCourseSelection());
+
+    	ArrayList<Student> students = PowerSchool.getStudentsByCourse(inputCourseNo);
+
+        if (students.isEmpty()) {
+            System.out.println("\nNo students to display.");
+        } else {
+            System.out.println();
+
+            int i = 1;
+            for (Student student : students) {
+            	if(student.getGpa() == -1) {
+            		System.out.println(i++ + ". " + student.getName() + " / --");
+            	}else if(student.getGpa() != -1) {
+            		System.out.println(i++ + ". " + student.getName() + " / " + student.getGpa());
+            	}
+
+            }
+        }
+    }
+
+    private void viewStudentsByCourse(String courseNo){
+        //
+        // get a list of students by course
+        //      to do this, you'll need to prompt the user to choose a course (more on this later)
+        //
+        // if the list of students is empty...
+        //      print a message saying exactly that
+        // otherwise...
+        //      print the list of students by name and grade point average
+        //
+
+    	int inputCourseNo = PowerSchool.getCourseIdFromNo(courseNo);
+
+    	ArrayList<Student> students = PowerSchool.getStudentsByCourse(inputCourseNo);
+
+        if (students.isEmpty()) {
+            System.out.println("\nNo students to display.");
+        } else {
+            System.out.println();
+
+            int i = 1;
+            for (Student student : students) {
+            	if(student.getGpa() == -1) {
+            		System.out.println(i++ + ". " + student.getName() + " / --");
+            	}else if(student.getGpa() != -1) {
+            		System.out.println(i++ + ". " + student.getName() + " / " + PowerSchool.getGrade(student.getStudentId(),inputCourseNo));
+            	}
+
+            }
+        }
+    }
+
+    private String getCourseByTeacherSelection(int teacher_id) {
+
+    	ArrayList<String> courseNames = PowerSchool.getCoursesByTeacher(teacher_id);
+
+    	if (courseNames.isEmpty()) {
+            System.out.println("\nNo courses to display.");
+        } else {
+            System.out.println();
+            int selection = -1;
+        	System.out.println("\nChoose a course.\n");
+        	while (selection < 1 || selection > 6) {
+
+	            int i = 1;
+	            for (String course : courseNames) {
+	                System.out.println("[" + i++ + "] " + course);
+	            }
+
+	            System.out.print("\n::: ");
+	            selection = Utils.getInt(in, -1);
+
+	            String selectedCourse = courseNames.get(selection-1);
+	            return selectedCourse;
+
+        	}
+        }
+
+    	return null;
+
+
+    }
+
+    private String getCourseByStudentSelection(int student_id) {
+
+    	ArrayList<String> courseNames = PowerSchool.getCoursesByStudent(student_id);
+
+    	if (courseNames.isEmpty()) {
+            System.out.println("\nNo courses to display.");
+        } else {
+            System.out.println();
+            int selection = -1;
+        	System.out.println("\nChoose a course.\n");
+        	while (selection < 1 || selection > 6) {
+
+	            int i = 1;
+	            for (String course : courseNames) {
+	                System.out.println("[" + i++ + "] " + course);
+	            }
+
+	            System.out.print("\n::: ");
+	            selection = Utils.getInt(in, -1);
+
+	            String selectedCourse = courseNames.get(selection-1);
+	            return selectedCourse;
+
+        	}
+        }
+
+    	return null;
+
+
+    }
+
     /////// MAIN METHOD ///////////////////////////////////////////////////////////////////
 
     /*
