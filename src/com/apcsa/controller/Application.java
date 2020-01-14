@@ -1,14 +1,24 @@
 package com.apcsa.controller;
 
 import java.util.Scanner;
+import java.util.ArrayList
 import com.apcsa.data.PowerSchool;
+import com.apcsa.model.Teacher;
+import com.apcsa.model.Student;
+import com.apcsa.data.QueryUtils;
 import com.apcsa.model.User;
 
 public class Application {
 
+    String userResetName;
+
     private Scanner in;
     private User activeUser;
-t
+
+    enum RootAction { PASSWORD, DATABASE, LOGOUT, SHUTDOWN }
+    enum AdministratorAction { FACULTY, DEPARTMENT, STUDENTS, GRADE, COURSE, PASSWORD, LOGOUT }
+    enum TeacherAction { STUDENTS_COURSE, ADD_ASS, DEL_ASS, GRADE_ASS, PASSWORD, LOGOUT }
+    enum StudentAction { COURSE_GRADE, COURSE_ASS, PASSWORD, LOGOUT }
     /**
      * Creates an instance of the Application class, which is responsible for interacting
      * with the user via the command line interface.
