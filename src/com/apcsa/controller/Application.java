@@ -561,6 +561,225 @@ private void viewStudents() {
 
     }
 
+    private int getAssignmentIdSelection(int course_id, int marking_period, int is_midterm, int is_final) {
+     ArrayList<String> assignments = PowerSchool.getAssignmentsByCourseAndMP(course_id, marking_period, is_midterm, is_final);
+     ArrayList<Integer> assignmentIds = PowerSchool.getAssignmentsByCourseAndMPIds(course_id, marking_period, is_midterm, is_final);
+
+     if (assignments.isEmpty()) {
+           System.out.println("\nNo courses to display.");
+       } else {
+           System.out.println();
+           int selection = -1;
+         System.out.println("\nChoose a course.\n");
+         while (selection < 1 || selection > 6) {
+
+             int i = 1;
+             for (String assignment : assignments) {
+                 System.out.println("[" + i++ + "] " + assignment);
+             }
+
+             System.out.print("\n::: ");
+             selection = Utils.getInt(in, -1);
+
+             return assignmentIds.get(selection-1);
+
+         }
+       }
+
+     return -1;
+   }
+
+   private void viewStudentsByCourseTeacher() {
+
+     String courseName = getCourseByTeacherSelection(PowerSchool.getTeacherId(activeUser.getUserId()));
+
+     viewStudentsByCourse(courseName);
+
+   }
+
+   private void addAssignment() {
+     String courseName = getCourseByTeacherSelection(PowerSchool.getTeacherId(activeUser.getUserId()));
+     int inputIsFinal = -1;
+     int inputIsMidterm = -1;
+     int inputMarkingPeriod = -1;
+
+     int inputMPSelection = getMarkingPeriodSelection();
+
+     if(inputMPSelection == 5) {
+       inputIsMidterm = 1;
+     }else if(inputMPSelection == 6) {
+       inputIsFinal = 1;
+     }else if(inputMPSelection != 5 && inputMPSelection != 6) {
+       inputMarkingPeriod = inputMPSelection;
+     }
+
+     System.out.print("\nAssignment Title: ");
+     String inputTitle = in.nextLine();
+
+     double inputPointValue = -1;
+     boolean validInput = false;
+
+     while(!(validInput)) {
+
+       System.out.print("Point Value: ");
+       inputPointValue = in.nextDouble();
+
+       if(inputPointValue >= 1 && inputPointValue <= 100) {
+         validInput = true;
+       }else if(!(inputPointValue > 1 && inputPointValue < 100)) {
+         System.out.println("Point values must be between 1 and 100.");
+       }
+     }
+     boolean confirm = Utils.confirm(in, "\nAre you sure you want to create this assignment? (y/n)");
+     if(confirm) {
+       System.out.print("\nSuccessfully created assignment.\n");
+       PowerSchool.addAssignment(PowerSchool.getCourseIdFromNo(courseName), PowerSchool.getAssignmentNo(PowerSchool.getCourseIdFromNo(courseName))+1, inputMarkingPeriod, inputIsMidterm, inputIsFinal, inputTitle, inputPointValue);
+     }else if(!confirm) {
+       System.out.print("\nAssignment creation cancelled.\n");
+     }
+
+   }
+
+   public void delAssignment() {
+
+     String courseName = getCourseByTeacherSelection(PowerSchool.getTeacherId(activeUser.getUserId()));
+     int courseId = PowerSchool.getCourseIdFromNo(courseName);
+     int inputIsFinal = -1;
+     int inputIsMidterm = -1;
+     int inputMarkingPeriod = -1;
+
+     int inputMPSelection = getMarkingPeriodSelection();
+
+     if(inputMPSelection == 5) {
+       inputIsMidterm = 1;
+     }else if(inputMPSelection == 6) {
+       inputIsFinal = 1;
+     }else if(inputMPSelection != 5 && inputMPSelection != 6) {
+       inputMarkingPeriod = inputMPSelection;
+     }
+
+     int assignmentId = getAssignmentIdSelection(courseId, inputMarkingPeriod, inputIsMidterm, inputIsFinal);
+
+     boolean confirm = Utils.confirm(in, "\nAre you sure you want to delete this assignment? (y/n)");
+     if(confirm) {
+       System.out.print("\nSuccessfully deleted " + PowerSchool.getAssignmentName(assignmentId, courseId) + ".\n");
+       PowerSchool.delAssignment(assignmentId, courseId);
+     }else if(!confirm) {
+       System.out.print("\nDeletion of " + PowerSchool.getAssignmentName(assignmentId, courseId) + " cancelled.\n");
+     }
+
+   }
+
+   public int getStudentIdFromCourseSelection(int course_id) {
+     ArrayList<Student> students = PowerSchool.getStudentsByCourse(course_id);
+
+     if (students.isEmpty()) {
+           System.out.println("\nNo students to display.");
+       } else {
+           System.out.println();
+           int selection = -1;
+         System.out.println("\nChoose a student.\n");
+         while (selection < 1 || selection > 6) {
+
+             int i = 1;
+             for (Student student : students) {
+                 System.out.println("[" + i++ + "] " + student.getName());
+             }
+
+             System.out.print("\n::: ");
+
+             selection = Utils.getInt(in, -1);
+
+             return students.get(selection-1).getStudentId();
+
+         }
+       }
+
+     return -1;
+   }
+
+   public void enterAssignmentGrade() {
+     String courseName = getCourseByTeacherSelection(PowerSchool.getTeacherId(activeUser.getUserId()));
+     int courseId = PowerSchool.getCourseIdFromNo(courseName);
+     int inputIsFinal = -1;
+     int inputIsMidterm = -1;
+     int inputMarkingPeriod = -1;
+
+     int inputMPSelection = getMarkingPeriodSelection();
+
+     if(inputMPSelection == 5) {
+       inputIsMidterm = 1;
+     }else if(inputMPSelection == 6) {
+       inputIsFinal = 1;
+     }else if(inputMPSelection != 5 && inputMPSelection != 6) {
+       inputMarkingPeriod = inputMPSelection;
+     }
+
+
+
+     int assignmentId = getAssignmentIdSelection(courseId, inputMarkingPeriod, inputIsMidterm, inputIsFinal);
+
+     double assignmentPointsPossible = PowerSchool.getAssignmentPointsPossible(assignmentId, courseId);
+
+     int studentId = getStudentIdFromCourseSelection(courseId);
+
+     System.out.println("Assignment: " + PowerSchool.getAssignmentName(assignmentId, courseId));
+     System.out.println("Student: " + PowerSchool.getStudentName(studentId));
+     if(!PowerSchool.doesItHaveGrade(courseId, assignmentId, studentId)) {
+       System.out.println("Current Grade: --");
+     }else if(PowerSchool.doesItHaveGrade(courseId, assignmentId, studentId)) {
+       System.out.println("Current Grade: " + Double.toString(PowerSchool.getAssignmentGrade(courseId, assignmentId, studentId)));
+     }
+
+     double inputPointValue = -1;
+     boolean validInput = false;
+
+     while(!(validInput)) {
+
+       System.out.print("\nNew Grade: ");
+       inputPointValue = in.nextDouble();
+
+       if(inputPointValue >= 0 && inputPointValue <= assignmentPointsPossible) {
+         validInput = true;
+       }else if(!(inputPointValue > 0 && inputPointValue < assignmentPointsPossible)) {
+         System.out.println("Point values must be between 0 and " + Double.toString(assignmentPointsPossible) + ".");
+       }
+     }
+
+     boolean confirmGrade = Utils.confirm(in,"Are you sure you want to enter this grade? (y/n)");
+
+     if(confirmGrade) {
+       PowerSchool.enterAssignmentGrade(assignmentId, courseId, studentId, inputPointValue, assignmentPointsPossible);
+       System.out.println("Successfully entered grade.\n");
+     }else if(!confirmGrade) {
+       System.out.println("Grade entering cancelled.\n");
+     }
+
+     PowerSchool.updateCourseGrade(inputMPSelection, studentId, courseId, PowerSchool.generateGrade(inputMPSelection, courseId, studentId));
+
+     Double[] courseGrades = PowerSchool.getCourseGrades(studentId, courseId);
+
+     PowerSchool.updateCourseGrade(7, studentId, courseId,Utils.getGrade(courseGrades));
+
+     PowerSchool.updateGPA(PowerSchool.generateGPA(studentId,courseId),studentId);
+
+     ArrayList<Student> rankList = Utils.updateRanks(PowerSchool.getStudents(PowerSchool.getStudentGradYear(studentId)));
+
+     for(int i = 0; i < rankList.size()-1; i++) {
+       if(rankList.get(i).getGpa() != -1.0) {
+         if(i>0) {
+           if((rankList.get(i).getGpa() == rankList.get(i-1).getGpa())){
+             PowerSchool.updateClassRank(rankList.get(i-1).getClassRank(), rankList.get(i).getStudentId());
+           }else if(!(rankList.get(i).getGpa() == rankList.get(i-1).getGpa())) {
+           PowerSchool.updateClassRank(i+1,rankList.get(i).getStudentId());
+           }
+         }
+       }else if(rankList.get(i).getGpa() == -1.0) {
+         PowerSchool.updateClassRank(0,rankList.get(i).getStudentId());
+       }
+     }
+   }
+
     /////// MAIN METHOD ///////////////////////////////////////////////////////////////////
 
     /*
