@@ -246,6 +246,60 @@ public class Application {
         return selection;
     }
 
+    private int getGradeSelection() {
+        int selection = -1;
+        System.out.println("\nChoose a grade level.");
+
+        while (selection < 1 || selection > 4) {
+            System.out.println("\n[1] Freshman.");
+            System.out.println("[2] Sophomore.");
+            System.out.println("[3] Junior.");
+            System.out.println("[4] Senior.");
+            System.out.print("\n::: ");
+
+            selection = Utils.getInt(in, -1);
+        }
+
+        return selection + 8;
+    }
+
+    private String getCourseSelection() {
+    boolean valid = false;
+    String courseNo = null;
+
+    while (!valid) {
+        System.out.print("\nCourse No.: ");
+        courseNo = in.next();
+
+        if (PowerSchool.testCourseNo(courseNo) > 0) {
+            valid = true;
+        } else if(PowerSchool.testCourseNo(courseNo) < 0){
+            System.out.println("\nCourse not found.");
+        }
+    }
+
+    return courseNo;
+}
+
+private int getMarkingPeriodSelection() {
+    int selection = -1;
+    System.out.println("\nChoose a marking period or exam status.");
+
+    while (selection < 1 || selection > 6) {
+        System.out.println("\n[1] MP1 assignment.");
+        System.out.println("[2] MP2 assignment.");
+        System.out.println("[3] MP3 assignment.");
+        System.out.println("[4] MP4 assignment.");
+        System.out.println("[5] Midterm exam.");
+        System.out.println("[6] Final exam.");
+        System.out.print("\n::: ");
+
+        selection = Utils.getInt(in, -1);
+    }
+
+    return selection;
+}
+
     /**
      * Logs in with the provided credentials.
      *
