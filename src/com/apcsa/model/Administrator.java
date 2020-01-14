@@ -8,7 +8,7 @@ import com.apcsa.model.User;
 
 public class Administrator extends User {
 
-    public Administrator(User user, ResultSet rs) {
+    public Administrator(User user, ResultSet rs) throws SQL Exception {
       }
     private int administratorId;
     private String firstName;
