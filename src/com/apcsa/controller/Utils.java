@@ -43,11 +43,11 @@ public class Utils {
 
     public static int getInt(Scanner in, int invalid) {
         try {
-            return in.nextInt();                // try to read and return user-provided value
+            return in.nextInt();
         } catch (InputMismatchException e) {
-            return invalid;                     // return default in the even of an type mismatch
+            return invalid;
         } finally {
-            in.nextLine();                      // always consume the dangling newline character
+            in.nextLine();
         }
     }
 
@@ -63,4 +63,22 @@ public class Utils {
 
         return response.equals("y");
     }
+
+   @SuppressWarnings({ "unchecked", "rawtypes" })
+   public static ArrayList<Student> updateRanks(ArrayList<Student> students) {
+       Collections.sort(students, new Comparator() {
+
+
+           @Override
+           public int compare(Object student1, Object student2) {
+               if (((Student) student1).getGpa() > ((Student) student2).getGpa()) {
+                   return -1;
+               } else if (((Student) student1).getGpa() == ((Student) student2).getGpa()) {
+                   return 0;
+               } else {
+                   return 1;
+               }
+           }
+
+       });
 }
