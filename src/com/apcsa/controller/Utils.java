@@ -139,4 +139,10 @@ public class Utils {
 
           return round(mpAvg * mpWeight + examAvg * examWeight, 2);
       }
+
+      private static double round(double value, int places) {
+        return new BigDecimal(Double.toString(value))
+            .setScale(places, RoundingMode.HALF_UP)
+            .doubleValue();
+    }
 }
