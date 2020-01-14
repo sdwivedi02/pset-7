@@ -13,11 +13,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.ArrayList;
 import com.apcsa.controller.Utils;
 import com.apcsa.model.Administrator;
 import com.apcsa.model.Student;
 import com.apcsa.model.Teacher;
 import com.apcsa.model.User;
+import java.util.stream.*;
+import java.util.*;
 
 public class PowerSchool {
 
@@ -212,6 +215,29 @@ public class PowerSchool {
         }
     }
 
+    private static int updateLastLogin(Connection conn, String username, String ts) {
+        try (PreparedStatement stmt = conn.prepareStatement(QueryUtils.UPDATE_LAST_LOGIN_SQL)) {
+
+            conn.setAutoCommit(false);
+            stmt.setString(1, ts);
+            stmt.setString(2, username);
+
+            if (stmt.executeUpdate() == 1) {
+                conn.commit();
+
+                return 1;
+            } else {
+                conn.rollback();
+
+                return -1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            return -1;
+        }
+    }
+
     /*
      * Builds the database. Executes a SQL script from a configuration file to
      * create the tables, setup the primary and foreign keys, and load sample data.
@@ -250,3 +276,64 @@ public class PowerSchool {
         }
     }
 }
+
+public static void resetPassword(String username) {
+        //
+        // get a connection to the database
+        // create a prepared statement (both of thses should go in a try-with-resources statement)
+        //
+        // insert parameters into the prepared statement
+        //      - the user's hashed username
+        //      - the user's plaintext username
+        //
+        // execute the update statement
+        //
+
+    	try ( Connection conn = getConnection();
+        		PreparedStatement stmt = conn.prepareStatement(QueryUtils.UPDATE_PASSWORD_AND_TIME_SQL)) {
+
+            conn.setAutoCommit(false);
+            stmt.setString(1, Utils.getHash(username));
+            stmt.setString(2, "0000-00-00 00:00:00.000");
+            stmt.setString(3, username);
+
+            if (stmt.executeUpdate() == 1) {
+                conn.commit();
+
+            } else {
+                conn.rollback();
+
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+
+        }
+
+    }
+
+    public static int updatePassword(String username, String password) {
+
+        try ( Connection conn = getConnection();
+        		PreparedStatement stmt = conn.prepareStatement(QueryUtils.UPDATE_PASSWORD_SQL)) {
+
+            conn.setAutoCommit(false);
+            stmt.setString(1, password);
+            stmt.setString(2, username);
+
+            if (stmt.executeUpdate() == 1) {
+                conn.commit();
+
+                return 1;
+            } else {
+                conn.rollback();
+
+                return -1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            return -1;
+        }
+    }
