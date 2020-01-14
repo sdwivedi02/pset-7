@@ -26,8 +26,17 @@ public class Teacher extends User {
   	  this.departmentName = rs.getString("title");
   	}
     public String getDepartmentName() {
-      
+      return departmentName;
     }
+    public String getName() {
+	    return lastName + ", " + firstName;
+	  }
+	  public int getTeacher_id() {
+		return teacherId;
+	  }
+	  public String getFirstName() {
+		return firstName;
+	  }
     private int teacherId;
     private int departmentId;
     private String firstName;
