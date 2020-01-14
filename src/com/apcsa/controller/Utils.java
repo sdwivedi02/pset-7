@@ -50,4 +50,17 @@ public class Utils {
             in.nextLine();                      // always consume the dangling newline character
         }
     }
+
+    public static boolean confirm(Scanner in, String message) {
+        String response = "";
+
+        // prompt user for explicit response of yes or no
+
+        while (!response.equals("y") && !response.equals("n")) {
+            System.out.print(message);
+            response = in.next().toLowerCase();
+        }
+
+        return response.equals("y");
+    }
 }
