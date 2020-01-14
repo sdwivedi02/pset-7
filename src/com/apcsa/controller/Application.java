@@ -320,10 +320,6 @@ private int getMarkingPeriodSelection() {
      * @return true if the user has never logged in; false otherwise
      */
 
-    public boolean isFirstLogin() {
-        return activeUser.getLastLogin().equals("0000-00-00 00:00:00.000");
-    }
-
     private void resetPassword() {
 
     	System.out.print("\nEnter username of account to be reset: ");
@@ -779,6 +775,120 @@ private void viewStudents() {
        }
      }
    }
+
+   public void viewCourseGrades() {
+  ArrayList<String> coursesAndGrades = PowerSchool.getGrade((PowerSchool.getStudentId(activeUser.getUserId())));
+
+  if (coursesAndGrades.isEmpty()) {
+        System.out.println("\nNo courses to display.");
+    } else {
+        System.out.println();
+        int i = 1;
+          for (String courseAndGrade : coursesAndGrades) {
+              System.out.println(i++ + ". " + courseAndGrade);
+          }
+
+    }
+}
+
+public void viewAssignmentGradesByCourse() {
+
+  int studentId = PowerSchool.getStudentId(activeUser.getUserId());
+
+  String courseNo = getCourseByStudentSelection(studentId);
+
+  int courseId = PowerSchool.getCourseIdFromNo(courseNo);
+
+  int inputIsFinal = -1;
+  int inputIsMidterm = -1;
+  int inputMarkingPeriod = -1;
+
+  int inputMPSelection = getMarkingPeriodSelection();
+
+  ArrayList<String> assignmentsAndGrades = PowerSchool.getCourseAssignmentsGrade(studentId, courseId, inputMPSelection);
+
+  if (assignmentsAndGrades.isEmpty()) {
+        System.out.println("\nNo assignments to display.");
+    } else {
+        System.out.println();
+        int i = 1;
+          for (String assignmentAndGrade : assignmentsAndGrades) {
+              System.out.println(i++ + ". " + assignmentAndGrade);
+          }
+
+    }
+}
+
+public boolean isFirstLogin() {
+    return activeUser.getLastLogin().equals("0000-00-00 00:00:00.000");
+}
+
+private void changePassword(boolean firstLogin) {
+
+    	if(isFirstLogin()) {
+    		System.out.print("\nEnter new password: ");
+    		String newPass = in.next();
+    		PowerSchool.updatePassword(activeUser.getUsername(), Utils.getHash(newPass));
+    	}else if(!isFirstLogin()) {
+    		System.out.print("\nEnter current password: ");
+    		String currentPass = in.next();
+    		System.out.print("Enter new password: ");
+    		String newPass = in.next();
+    		if(PowerSchool.login(activeUser.getUsername(), currentPass) != null) {
+    			PowerSchool.updatePassword(activeUser.getUsername(), Utils.getHash(newPass));
+    			System.out.println("\nSuccessfully changed password.");
+    		}else if(PowerSchool.login(activeUser.getUsername(), currentPass) == null) {
+    			System.out.println("\nInvalid current password.");
+    		}
+    	}
+
+    }
+
+private void shutdown(Exception e) {
+        if (in != null) {
+            in.close();
+        }
+
+        System.out.println("Encountered unrecoverable error. Shutting down...\n");
+        System.out.println(e.getMessage());
+
+        System.out.println("\nGoodbye!");
+        System.exit(0);
+    }
+
+private void shutdown() {
+       System.out.println();
+
+       if (Utils.confirm(in, "Are you sure? (y/n) ")) {
+            if (in != null) {
+               in.close();
+           }
+
+           System.out.println("\nGoodbye!");
+           System.exit(0);
+        }
+    }
+
+private void factoryReset() {
+  if(Utils.confirm(in, "Are you sure you want to reset all settings and data? (y/n) ")) {
+    PowerSchool.initialize(true);
+    System.out.println("Successfully reset database.");
+  }else {
+    System.out.println("Factory reset cancelled.");
+  }
+
+}
+
+private void logout() {
+
+    	if(Utils.confirm(in, "\nAre you sure you want to logout? (y/n) ")){
+    		activeUser = null;
+    	}else {
+    		System.out.println("Logout cancelled.");
+    	}
+
+    }
+
 
     /////// MAIN METHOD ///////////////////////////////////////////////////////////////////
 
