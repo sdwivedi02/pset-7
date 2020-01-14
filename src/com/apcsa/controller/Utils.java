@@ -3,6 +3,15 @@ package com.apcsa.controller;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+import java.util.Scanner;
+
+import com.apcsa.model.Student;
+
+import java.util.*;
+
 public class Utils {
 
     /**
