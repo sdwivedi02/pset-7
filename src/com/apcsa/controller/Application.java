@@ -324,6 +324,58 @@ private int getMarkingPeriodSelection() {
         return activeUser.getLastLogin().equals("0000-00-00 00:00:00.000");
     }
 
+    private void resetPassword() {
+
+    	System.out.print("\nEnter username of account to be reset: ");
+ 	   userResetName = in.next();
+
+ 	   if(Utils.confirm(in, "\nAre you sure you want to reset the password for " + userResetName + "? (y/n)")){
+ 		  PowerSchool.resetPassword(userResetName);
+ 		  System.out.println("Successfully reset password for " + userResetName + ".");
+ 	   }else if(!Utils.confirm(in, "\nAre you sure you want to reset the password for " + userResetName + "? (y/n)")) {
+ 		   System.out.println("Password reset for account " + userResetName + " cancelled.");
+ 	   }
+
+    }
+
+    private void viewFaculty() {
+    ArrayList<Teacher> teachers = PowerSchool.getTeachers();
+
+    if (teachers.isEmpty()) {
+        System.out.println("\nNo teachers to display.");
+    } else {
+        System.out.println();
+
+        int i = 1;
+        for (Teacher teacher : teachers) {
+            System.out.println(i++ + ". " + teacher.getName() + " / " + teacher.getDepartmentName());
+        }
+    }
+}
+
+/*
+ * Displays all faculty members by department.
+ */
+
+private void viewFacultyByDepartment() {
+
+  int inputDeptId = getDepartmentSelection();
+
+  ArrayList<Teacher> teachers = PowerSchool.getTeachersByDepartment(inputDeptId);
+
+    if (teachers.isEmpty()) {
+        System.out.println("\nNo teachers to display.");
+    } else {
+        System.out.println();
+
+        int i = 1;
+        for (Teacher teacher : teachers) {
+            System.out.println(i++ + ". " + teacher.getName() + " / " + PowerSchool.getDepartmentTitle(inputDeptId));
+        }
+    }
+
+}
+
     /////// MAIN METHOD ///////////////////////////////////////////////////////////////////
 
     /*
