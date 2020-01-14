@@ -690,3 +690,118 @@ public static void resetPassword(String username) {
 
                  return -1;
              }
+
+             public static String getAssignmentName( int assignment_id, int course_id) {
+                	 try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(QueryUtils.GET_ASSIGNMENT_NAME)){
+
+                    	 stmt.setString(2, Integer.toString(course_id));
+                    	 stmt.setString(1,  Integer.toString(assignment_id));
+
+                         try (ResultSet rs = stmt.executeQuery()) {
+                             while (rs.next()) {
+                                 return rs.getString("title");
+                             }
+                         }
+                     } catch (SQLException e) {
+                         e.printStackTrace();
+                     }
+
+                     return null;
+                 	}
+
+                 public static String getStudentName(int student_id) {
+                	 try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(QueryUtils.GET_STUDENT_NAME)){
+
+                    	 stmt.setString(1, Integer.toString(student_id));
+
+                         try (ResultSet rs = stmt.executeQuery()) {
+                             while (rs.next()) {
+                                 return (rs.getString("last_name") + ", " + rs.getString("first_name"));
+                             }
+                         }
+                     } catch (SQLException e) {
+                         e.printStackTrace();
+                     }
+
+                     return null;
+
+                 }
+
+                 public static boolean doesItHaveGrade(int course_id, int assignment_id, int student_id) {
+                	 try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(QueryUtils.GET_ASSIGNMENT_GRADE)){
+
+                		 stmt.setString(1, Integer.toString(course_id));
+                		 stmt.setString(2, Integer.toString(assignment_id));
+                    	 stmt.setString(3, Integer.toString(student_id));
+
+                         try (ResultSet rs = stmt.executeQuery()) {
+                             while (rs.next()) {
+                            	 return true;
+
+                             }
+                         }
+                     } catch (SQLException e) {
+                         e.printStackTrace();
+                     }
+
+                     return false;
+                 }
+
+                 public static double getAssignmentGrade(int course_id, int assignment_id, int student_id) {
+                	 try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(QueryUtils.GET_ASSIGNMENT_GRADE)){
+
+                		 stmt.setString(1, Integer.toString(course_id));
+                		 stmt.setString(2, Integer.toString(assignment_id));
+                    	 stmt.setString(3, Integer.toString(student_id));
+
+                         try (ResultSet rs = stmt.executeQuery()) {
+                             while (rs.next()) {
+                                 return rs.getDouble("points_earned");
+                             }
+                         }
+                     } catch (SQLException e) {
+                         e.printStackTrace();
+                     }
+
+                     return -1;
+                 }
+
+                 public static boolean updateCourseGrade(int grade_period, int student_id, int course_id, double grade_value) {
+
+                	 String query = QueryUtils.UPDATE_COURSE_GRADE;
+
+            		 switch(grade_period) {
+            		 	case 1: query += "mp1";break;
+            		 	case 2: query += "mp2";break;
+            		 	case 3: query += "mp3";break;
+            		 	case 4: query += "mp4";break;
+            		 	case 5: query += "midterm_exam";break;
+            		 	case 6: query += "final_exam";break;
+            		 	case 7: query += "grade";break;
+            		 }
+
+            		 String secondHalf = " = " + Double.toString(grade_value) + " WHERE student_id = " + Integer.toString(student_id) + " AND course_id = " + Integer.toString(course_id);
+
+            		 String completeQuery = query + secondHalf;
+
+                	 try ( Connection conn = getConnection();
+                     		PreparedStatement stmt = conn.prepareStatement(completeQuery)) {
+
+
+                         conn.setAutoCommit(false);
+
+                         if (stmt.executeUpdate() == 1) {
+                             conn.commit();
+
+                             return true;
+                         } else {
+                             conn.rollback();
+
+                             return false;
+                         }
+                     } catch (SQLException e) {
+                         e.printStackTrace();
+
+                         return false;
+                     }
+                 }
