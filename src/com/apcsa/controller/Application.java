@@ -90,6 +90,18 @@ public class Application {
         }
     }
 
+    private void showRootUI() {
+        while (activeUser != null) {
+            switch (getRootMenuSelection()) {
+                case PASSWORD: resetPassword(); break;
+                case DATABASE: factoryReset(); break;
+                case LOGOUT: logout(); break;
+                case SHUTDOWN: shutdown(); break;
+                default: System.out.println("\nInvalid selection."); break;
+            }
+        }
+    }
+
     /**
      * Logs in with the provided credentials.
      *
