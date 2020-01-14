@@ -8,7 +8,7 @@ public class Application {
 
     private Scanner in;
     private User activeUser;
-
+t
     /**
      * Creates an instance of the Application class, which is responsible for interacting
      * with the user via the command line interface.
@@ -51,6 +51,8 @@ public class Application {
 
                 if (isFirstLogin() && !activeUser.isRoot()) {
                     // first-time users need to change their passwords from the default provided
+                    System.out.print("Enter a new password: ");
+                	  password = in.next();
                 }
 
                 // create and show the user interface
