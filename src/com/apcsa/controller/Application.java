@@ -61,17 +61,32 @@ public class Application {
 
                 if (isFirstLogin() && !activeUser.isRoot()) {
                     // first-time users need to change their passwords from the default provided
-                    System.out.print("Enter a new password: ");
-                	  password = in.next();
+                    changePassword(true);
                 }
 
                 // create and show the user interface
                 //
                 // remember, the interface will be difference depending on the type
                 // of user that is logged in (root, administrator, teacher, student)
+              createAndShowUI();
+
             } else {
                 System.out.println("\nInvalid username and/or password.");
             }
+        }
+    }
+
+    public void createAndShowUI() {
+        System.out.println("\nHello, again, " + activeUser.getFirstName() + "!");
+
+        if (activeUser.isRoot()) {
+            showRootUI();
+        } else if (activeUser.isAdministrator()) {
+            showAdministratorUI();
+        } else if(activeUser.isTeacher()){
+            showTeacherUI();
+        } else if(activeUser.isStudent()) {
+        	showStudentUI();
         }
     }
 
