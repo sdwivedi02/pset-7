@@ -81,4 +81,14 @@ public class Utils {
            }
 
        });
+
+       int rank = 1;
+            for (int i = 0; i < students.size(); i++) {
+                Student student = students.get(i);
+
+                student.setClassRank(student.getGpa() != -1 ? rank++ : 0);
+            }
+
+            return students;
+        }
 }
