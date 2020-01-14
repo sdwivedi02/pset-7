@@ -227,6 +227,25 @@ public class Application {
        }
     }
 
+    private int getDepartmentSelection() {
+        int selection = -1;
+        System.out.println("\nChoose a department.");
+
+        while (selection < 1 || selection > 6) {
+            System.out.println("\n[1] Computer Science.");
+            System.out.println("[2] English.");
+            System.out.println("[3] History.");
+            System.out.println("[4] Mathematics.");
+            System.out.println("[5] Physical Education.");
+            System.out.println("[6] Science.");
+            System.out.print("\n::: ");
+
+            selection = Utils.getInt(in, -1);
+        }
+
+        return selection;
+    }
+
     /**
      * Logs in with the provided credentials.
      *
