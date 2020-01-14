@@ -102,6 +102,47 @@ public class Application {
         }
     }
 
+    private void showAdministratorUI() {
+        while (activeUser != null) {
+            switch (getAdministratorMenuSelection()) {
+                case FACULTY: viewFaculty(); break;
+                case DEPARTMENT: viewFacultyByDepartment(); break;
+                case STUDENTS: viewStudents(); break;
+                case GRADE: viewStudentsByGrade(); break;
+                case COURSE: viewStudentsByCourse(); break;
+                case PASSWORD: changePassword(false); break;
+                case LOGOUT: logout(); break;
+                default: System.out.println("\nInvalid selection."); break;
+            }
+        }
+    }
+
+    private void showTeacherUI() {
+        while (activeUser != null) {
+            switch (getTeacherMenuSelection()) {
+                case STUDENTS_COURSE: viewStudentsByCourseTeacher(); break;
+                case ADD_ASS: addAssignment(); break;
+                case DEL_ASS: delAssignment(); break;
+                case GRADE_ASS: enterAssignmentGrade(); break;
+                case PASSWORD: changePassword(false); break;
+                case LOGOUT: logout(); break;
+                default: System.out.println("\nInvalid selection."); break;
+            }
+        }
+    }
+
+    private void showStudentUI() {
+        while (activeUser != null) {
+            switch (getStudentMenuSelection()) {
+                case COURSE_GRADE: viewCourseGrades(); break;
+                case COURSE_ASS: viewAssignmentGradesByCourse(); break;
+                case PASSWORD: changePassword(false); break;
+                case LOGOUT: logout(); break;
+                default: System.out.println("\nInvalid selection."); break;
+            }
+        }
+    }
+
     /**
      * Logs in with the provided credentials.
      *
