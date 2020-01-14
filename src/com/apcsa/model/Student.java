@@ -40,4 +40,36 @@ public class Student extends User {
     private String firstName;
     private String lastName;
 
+    public double getGpa() {
+    	return gpa;
+    }
+
+    public void setClassRank(int rank) {
+    	classRank = rank;
+    }
+
+    public String getName() {
+    	return lastName + ", " + firstName;
+    }
+
+    public int getGradYear() {
+    	return graduationYear;
+    }
+
+    public int getRank() {
+    	return classRank;
+    }
+
+    public int getStudentId() {
+    	return studentId;
+    }
+
+    public String getFirstName() {
+    	return firstName;
+    }
+
+    public int getClassRank() {
+    	return classRank;
+    }
+
 }
