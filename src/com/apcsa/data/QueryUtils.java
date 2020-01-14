@@ -3,16 +3,16 @@ package com.apcsa.data;
 public class QueryUtils {
 
     /////// QUERY CONSTANTS ///////////////////////////////////////////////////////////////
-    
+
     /*
      * Determines if the default tables were correctly loaded.
      */
-	
+
     public static final String SETUP_SQL =
         "SELECT COUNT(name) AS names FROM sqlite_master " +
             "WHERE type = 'table' " +
         "AND name NOT LIKE 'sqlite_%'";
-    
+
     /*
      * Updates the last login timestamp each time a user logs into the system.
      */
@@ -21,7 +21,7 @@ public class QueryUtils {
         "SELECT * FROM users " +
             "WHERE username = ?" +
         "AND auth = ?";
-    
+
     /*
      * Updates the last login timestamp each time a user logs into the system.
      */
@@ -30,7 +30,7 @@ public class QueryUtils {
         "UPDATE users " +
             "SET last_login = ? " +
         "WHERE username = ?";
-    
+
     /*
      * Retrieves an administrator associated with a user account.
      */
@@ -38,7 +38,7 @@ public class QueryUtils {
     public static final String GET_ADMIN_SQL =
         "SELECT * FROM administrators " +
             "WHERE user_id = ?";
-    
+
     /*
      * Retrieves a teacher associated with a user account.
      */
@@ -46,7 +46,11 @@ public class QueryUtils {
     public static final String GET_TEACHER_SQL =
         "SELECT * FROM teachers " +
             "WHERE user_id = ?";
-    
+
+    public static final String GET_TEACHER_DEPARTMENT_SQL =
+        "SELECT * FROM teachers INNER JOIN departments WHERE teachers.department_id = departments.department_id AND user_id = ?";
+
+
     /*
      * Retrieves a student associated with a user account.
      */
