@@ -1121,3 +1121,84 @@ public static void resetPassword(String username) {
                                        return -1;
                                    }
                                }
+                               public static double getGrade(int student_id, int course_id) {
+                                   	 try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(QueryUtils.GET_COURSES_GRADE_SQL)){
+
+                                       	 stmt.setString(1, Integer.toString(student_id));
+                                       	 stmt.setString(2, Integer.toString(course_id));
+
+                                            try (ResultSet rs = stmt.executeQuery()) {
+                                                while (rs.next()) {
+                                                     return rs.getDouble("grade");
+                                                }
+                                            }
+
+                                        } catch (SQLException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        return -1;
+                                    }
+
+                                    public static ArrayList<String> getGrade(int student_id) {
+                                   	 ArrayList<String> coursesAndGrades = new ArrayList<String>();
+                                   	 try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(QueryUtils.GET_ALL_STUDENT_COURSE_INFO)){
+
+                                       	 stmt.setString(1, Integer.toString(student_id));
+
+                                            try (ResultSet rs = stmt.executeQuery()) {
+                                                while (rs.next()) {
+                                               	 	String courseGrade = "";
+                                               	 	if(rs.getString("grade") == null) {
+                                               	 		courseGrade = "--";
+                                               	 	}else if(rs.getString("grade") != null) {
+                                               	 		courseGrade = rs.getString("grade");
+                                               	 	}
+                                                      coursesAndGrades.add(rs.getString("title") + " / " + courseGrade);
+                                                }
+                                            }
+
+                                            return coursesAndGrades;
+
+                                        } catch (SQLException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        return null;
+                                    }
+
+                                    public static int getStudentId(int user_id) {
+
+                                        try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(QueryUtils.GET_STUDENT_ID_FROM_USER_ID_SQL)){
+
+                                       	 stmt.setString(1, Integer.toString(user_id));
+
+                                            try (ResultSet rs = stmt.executeQuery()) {
+                                                while (rs.next()) {
+                                                    return rs.getInt("student_id");
+                                                }
+                                            }
+                                        } catch (SQLException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        return -1;
+                                    }
+
+                                    public static ArrayList<Student> getStudents(int gradYear){
+                                   	 ArrayList<Student> students = new ArrayList<Student>();
+                                   	 try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(QueryUtils.GET_ALL_STUDENTS_BY_YEAR_SQL)){
+
+                                       	 stmt.setString(1, Integer.toString(gradYear));
+
+                                            try (ResultSet rs = stmt.executeQuery()) {
+                                                while (rs.next()) {
+                                               	 students.add(new Student(rs));
+                                                }
+                                            }
+                                        }catch (SQLException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        return students;
+                                    }
