@@ -1,7 +1,7 @@
 package com.apcsa.controller;
 
 import java.util.Scanner;
-import java.util.ArrayList
+import java.util.ArrayList;
 import com.apcsa.data.PowerSchool;
 import com.apcsa.model.Teacher;
 import com.apcsa.model.Student;
