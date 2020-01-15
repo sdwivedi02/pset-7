@@ -805,3 +805,110 @@ public static void resetPassword(String username) {
                          return false;
                      }
                  }
+
+                 public static boolean doesItHaveGrade(int course_id, int student_id) {
+                     	 try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(QueryUtils.GET_ASSIGNMENT_GRADE)){
+
+                     		 stmt.setString(2, Integer.toString(course_id));
+                         	 stmt.setString(1, Integer.toString(student_id));
+
+                              try (ResultSet rs = stmt.executeQuery()) {
+                                  while (rs.next()) {
+                                 	 return true;
+
+                                  }
+                              }
+                          } catch (SQLException e) {
+                              e.printStackTrace();
+                          }
+
+                          return false;
+                      }
+
+                      public static Double[] getCourseGrades(int student_id, int course_id) {
+
+                     	 Double[] gradeArray = new Double[6];
+
+                     	 try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(QueryUtils.GET_SPECIFIC_STUDENT_COURSE_INFO)){
+
+                     		 stmt.setString(2, Integer.toString(course_id));
+                         	 stmt.setString(1, Integer.toString(student_id));
+
+
+
+                              try (ResultSet rs = stmt.executeQuery()) {
+
+                                 	 while(rs.next()) {
+
+                             	 		if(rs.getString("mp1") != null ) {
+                             	 				gradeArray[0] = rs.getDouble("mp1");
+                             	 		}else if(rs.getString("mp1") == null) {
+                             	 				gradeArray[0] = null;
+                             	 		}
+                 	            	 		if(rs.getString("mp2") != null ) {
+                 	            	 			gradeArray[1] = rs.getDouble("mp2");
+                 	        	 		}else if(rs.getString("mp2") == null) {
+                 	        	 				gradeArray[1] = null;
+                 	        	 		}
+
+                 	            	 		if(rs.getString("midterm_exam") != null ) {
+                 	            	 			gradeArray[2] = rs.getDouble("midterm_exam");
+                 	        	 		}else if(rs.getString("midterm_exam") == null) {
+                 	        	 				gradeArray[2] = null;
+                 	        	 		}
+
+                 	            	 		if(rs.getString("mp3") != null ) {
+                 	            	 			gradeArray[3] = rs.getDouble("mp3");
+                 	        	 		}else if(rs.getString("mp3") == null) {
+                 	        	 				gradeArray[3] = null;
+                 	        	 		}
+                 	            	 		if(rs.getString("mp4") != null ) {
+                 	            	 			gradeArray[4] = rs.getDouble("mp4");
+                 	        	 		}else if(rs.getString("mp4") == null) {
+                 	        	 				gradeArray[4] = null;
+                 	        	 		}
+
+                 	            	 		if(rs.getString("final_exam") != null ) {
+                 	            	 			gradeArray[5] = rs.getDouble("final_exam");
+                 	        	 		}      else if(rs.getString("final_exam") == null) {
+                 	        	 				gradeArray[5] = null;
+                 	        	 		}
+
+                             	 		return gradeArray;
+
+                                 	 }
+                                  }
+
+
+
+
+                          } catch (SQLException e) {
+                              e.printStackTrace();
+                          }
+
+                          return null;
+                      }
+
+                      public static double getTotalPointsPossible(int student_id, int course_id) {
+                     	 try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(QueryUtils.GET_ASSIGNMENTS_BY_STUDENT_AND_COURSE)){
+
+                     		 stmt.setString(2, Integer.toString(course_id));
+                         	 stmt.setString(1, Integer.toString(student_id));
+
+                         	 double pointsPossible = 0;
+
+                              try (ResultSet rs = stmt.executeQuery()) {
+                                  while (rs.next()) {
+                                      pointsPossible += rs.getDouble("points_possible");
+                                  }
+                              }
+
+                              return pointsPossible;
+
+                          } catch (SQLException e) {
+                              e.printStackTrace();
+                          }
+
+                          return -1;
+
+                      }
