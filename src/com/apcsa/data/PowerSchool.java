@@ -912,3 +912,101 @@ public static void resetPassword(String username) {
                           return -1;
 
                       }
+                      public static double getTotalPointsEarned(int student_id, int course_id) {
+                          	 try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(QueryUtils.GET_ASSIGNMENTS_BY_STUDENT_AND_COURSE)){
+
+                          		 stmt.setString(2, Integer.toString(course_id));
+                              	 stmt.setString(1, Integer.toString(student_id));
+
+                              	 double pointsEarned = 0;
+
+                                   try (ResultSet rs = stmt.executeQuery()) {
+                                       while (rs.next()) {
+                                           pointsEarned += rs.getDouble("points_earned");
+                                       }
+                                   }
+
+                                   return pointsEarned;
+
+                               } catch (SQLException e) {
+                                   e.printStackTrace();
+                               }
+
+                               return -1;
+
+                           }
+
+
+                           public static double getTotalPointsEarnedByMP(int student_id, int course_id, int marking_period) {
+
+                          	 String query = QueryUtils.GET_ASSIGNMENTS_BY_STUDENT_COURSE_MP;
+
+                      		 switch(marking_period) {
+                      		 	case 1: query += "marking_period = 1";break;
+                      		 	case 2: query += "marking_period = 2";break;
+                      		 	case 3: query += "marking_period = 3";break;
+                      		 	case 4: query += "marking_period = 4";break;
+                      		 	case 5: query += "is_midterm = 1";break;
+                      		 	case 6: query += "is_final = 1";break;
+                      		 }
+
+                          	 try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(query)){
+
+                          		 stmt.setString(2, Integer.toString(course_id));
+                              	 stmt.setString(1, Integer.toString(student_id));
+
+                              	 double pointsEarned = 0;
+
+                                   try (ResultSet rs = stmt.executeQuery()) {
+                                       while (rs.next()) {
+                                           pointsEarned += rs.getDouble("points_earned");
+                                       }
+                                   }
+
+                                   return pointsEarned;
+
+                               } catch (SQLException e) {
+                                   e.printStackTrace();
+                               }
+
+                               return -1;
+
+                           }
+
+                           public static double getTotalPointsPossibleByMP(int student_id, int course_id, int marking_period) {
+
+                          	 String query = QueryUtils.GET_ASSIGNMENTS_BY_STUDENT_COURSE_MP;
+
+                      		 switch(marking_period) {
+                      		 	case 1: query += "marking_period = 1";break;
+                      		 	case 2: query += "marking_period = 2";break;
+                      		 	case 3: query += "marking_period = 3";break;
+                      		 	case 4: query += "marking_period = 4";break;
+                      		 	case 5: query += "is_midterm = 1";break;
+                      		 	case 6: query += "is_final = 1";break;
+                      		 }
+
+
+
+                          	 try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(query)){
+
+                          		 stmt.setString(1, Integer.toString(student_id));
+                          		 stmt.setString(2, Integer.toString(course_id));
+
+                              	 double pointsEarned = 0;
+
+                                   try (ResultSet rs = stmt.executeQuery()) {
+                                       while (rs.next()) {
+                                           pointsEarned += rs.getDouble("points_possible");
+                                       }
+                                   }
+
+                                   return pointsEarned;
+
+                               } catch (SQLException e) {
+                                   e.printStackTrace();
+                               }
+
+                               return -1;
+
+                           }
