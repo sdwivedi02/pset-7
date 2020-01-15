@@ -1202,3 +1202,101 @@ public static void resetPassword(String username) {
 
                                         return students;
                                     }
+                                    public static int getStudentGradYear(int student_id) {
+
+                                             try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(QueryUtils.GET_GRAD_YEAR_SQL)){
+
+                                            	 stmt.setString(1, Integer.toString(student_id));
+
+                                                 try (ResultSet rs = stmt.executeQuery()) {
+                                                     while (rs.next()) {
+                                                         return rs.getInt("graduation");
+                                                     }
+                                                 }
+                                             } catch (SQLException e) {
+                                                 e.printStackTrace();
+                                             }
+
+                                             return -1;
+                                         }
+
+                                         public static ArrayList<String> getCourseAssignmentsGrade(int student_id, int course_id, int marking_period) {
+                                        	 ArrayList<String> assignmentsAndGrades = new ArrayList<String>();
+
+                                        	 String query = QueryUtils.GET_ASSIGNMENTS_BY_STUDENT_COURSE_MP;
+
+                                    		 switch(marking_period) {
+                                    		 	case 1: query += "marking_period = 1";break;
+                                    		 	case 2: query += "marking_period = 2";break;
+                                    		 	case 3: query += "marking_period = 3";break;
+                                    		 	case 4: query += "marking_period = 4";break;
+                                    		 	case 5: query += "is_midterm = 1";break;
+                                    		 	case 6: query += "is_final = 1";break;
+                                    		 }
+
+
+
+                                        	 try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(query)){
+
+                                        		 stmt.setString(1, Integer.toString(student_id));
+                                        		 stmt.setString(2, Integer.toString(course_id));
+
+                                                 try (ResultSet rs = stmt.executeQuery()) {
+                                                     while (rs.next()) {
+
+                                                           assignmentsAndGrades.add(rs.getString("title") + " / " + rs.getString("points_earned") + " (out of " + rs.getString("points_possible") + ")");
+                                                     }
+                                                 }
+
+                                                 return assignmentsAndGrades;
+
+                                             } catch (SQLException e) {
+                                                 e.printStackTrace();
+                                             }
+
+                                             return null;
+                                         }
+
+                                         public static ArrayList<String> getCoursesByStudent(int student_id){
+                                        	 ArrayList<String> courses = new ArrayList<String>();
+
+                                             try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(QueryUtils.GET_ALL_STUDENT_COURSE_INFO)){
+
+                                            	 stmt.setString(1, Integer.toString(student_id));
+
+                                                 try (ResultSet rs = stmt.executeQuery()) {
+                                                     while (rs.next()) {
+                                                         courses.add(rs.getString("course_no"));
+                                                     }
+                                                 }
+                                             } catch (SQLException e) {
+                                                 e.printStackTrace();
+                                             }
+
+                                             return courses;
+                                         }
+
+                                         public static int deleteAssignmentGrades(int course_id, int assignment_id) {
+                                        	 try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(QueryUtils.DEL_ASSIGNMENTS_GRADES_COURSE_ASSIGNMENT_ID)) {
+
+                                                 conn.setAutoCommit(false);
+                                                 stmt.setString(1, Integer.toString(course_id));
+                                                 stmt.setString(2, Integer.toString(assignment_id));
+
+                                                 if (stmt.executeUpdate() == 1) {
+                                                     conn.commit();
+
+                                                     return 1;
+                                                 } else {
+                                                     conn.rollback();
+
+                                                     return -1;
+                                                 }
+                                             } catch (SQLException e) {
+                                                 e.printStackTrace();
+
+                                                 return -1;
+                                             }
+                                         }
+
+                                    }
