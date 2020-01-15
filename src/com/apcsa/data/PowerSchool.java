@@ -1010,3 +1010,114 @@ public static void resetPassword(String username) {
                                return -1;
 
                            }
+                           public static double generateGrade(int marking_period, int course_id, int student_id) {
+
+                              	 double grade = (getTotalPointsEarnedByMP(student_id, course_id, marking_period) )/ (getTotalPointsPossibleByMP(student_id,course_id, marking_period));
+
+                              	 return grade*100;
+
+                               }
+
+                               public static double generateGPA(int student_id, int course_id) {
+                              	 try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(QueryUtils.GET_COURSES_GRADE_SQL)){
+
+                                  	 stmt.setString(2, Integer.toString(course_id));
+                                  	 stmt.setString(1,  Integer.toString(student_id));
+
+                                  	 double totalGPA = 0.0;
+                                  	 int classCount = 0;
+
+                                       try (ResultSet rs = stmt.executeQuery()) {
+                                           while (rs.next()) {
+                                               double grade =  rs.getDouble("grade");
+                                               classCount++;
+                                               grade = Math.round(grade);
+
+                                               double gpaGrade = 0.0;
+
+                                               if(grade >= 97 && grade <= 100) {
+                                              	 gpaGrade = 4.0;
+                                               }else if(grade >= 93 && grade <= 96) {
+                                              	 gpaGrade = 4.0;
+                                               }else if(grade >= 90 && grade <= 92) {
+                                              	 gpaGrade = 3.7;
+                                               }else if(grade >= 87 && grade <= 89) {
+                                              	 gpaGrade = 3.3;
+                                               }else if(grade >= 83 && grade <= 86) {
+                                              	 gpaGrade = 3.0;
+                                               }else if(grade >= 80 && grade <= 82) {
+                                              	 gpaGrade = 2.7;
+                                               }else if(grade >= 77 && grade <= 79) {
+                                              	 gpaGrade = 2.3;
+                                               }else if(grade >= 73 && grade <= 76) {
+                                              	 gpaGrade = 2.0;
+                                               }else if(grade >= 70 && grade <= 72) {
+                                              	 gpaGrade = 1.7;
+                                               }else if(grade >= 67 && grade <= 69) {
+                                              	 gpaGrade = 1.3;
+                                               }else if(grade >= 65 && grade <= 66) {
+                                              	 gpaGrade = 1.0;
+                                               }else if(grade < 65) {
+                                              	 gpaGrade = 0.0;
+                                               }
+
+                                               totalGPA += gpaGrade;
+
+                                               }
+
+                                           return totalGPA/classCount;
+
+                                           }
+
+                                   } catch (SQLException e) {
+                                       e.printStackTrace();
+                                   }
+
+                                   return -1.0;
+                               }
+
+                               public static int updateGPA(double gpa, int student_id) {
+                                   try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(QueryUtils.UPDATE_GPA_SQL)) {
+
+                                       conn.setAutoCommit(false);
+                                       stmt.setString(1, Double.toString(gpa));
+                                       stmt.setString(2, Integer.toString(student_id));
+
+                                       if (stmt.executeUpdate() == 1) {
+                                           conn.commit();
+
+                                           return 1;
+                                       } else {
+                                           conn.rollback();
+
+                                           return -1;
+                                       }
+                                   } catch (SQLException e) {
+                                       e.printStackTrace();
+
+                                       return -1;
+                                   }
+                               }
+
+                               public static int updateClassRank(int rank, int student_id) {
+                              	 try (Connection conn = getConnection();PreparedStatement stmt = conn.prepareStatement(QueryUtils.UPDATE_RANK_SQL)) {
+
+                                       conn.setAutoCommit(false);
+                                       stmt.setString(1, Double.toString(rank));
+                                       stmt.setString(2, Integer.toString(student_id));
+
+                                       if (stmt.executeUpdate() == 1) {
+                                           conn.commit();
+
+                                           return 1;
+                                       } else {
+                                           conn.rollback();
+
+                                           return -1;
+                                       }
+                                   } catch (SQLException e) {
+                                       e.printStackTrace();
+
+                                       return -1;
+                                   }
+                               }
